@@ -26,6 +26,7 @@ interface Employee {
   createdAt: string;
   password?: string;
   profilePicture?: string;
+  manualTotalHours?: number;
 }
 interface TimeEntry {
   id: string;
@@ -283,11 +284,8 @@ export function App() {
     };
     setEmployees(prev => [...prev, newEmployee]);
   };
-  const updateEmployee = (id: string, employeeData: Partial<Employee>) => {
-    setEmployees(prev => prev.map(emp => emp.id === id ? {
-      ...emp,
-      ...employeeData
-    } : emp));
+  const updateEmployee = (id: string, updatedEmployee: Employee) => {
+    setEmployees(employees.map(emp => emp.id === id ? { ...emp, ...updatedEmployee } : emp));
   };
   const deleteEmployee = (id: string) => {
     setEmployees(prev => prev.filter(emp => emp.id !== id));

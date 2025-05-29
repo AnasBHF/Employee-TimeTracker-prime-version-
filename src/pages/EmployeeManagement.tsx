@@ -451,7 +451,15 @@ export function EmployeeManagement() {
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {totalHours.toFixed(1)}h
+                  <input
+                    type="number"
+                    value={employee.manualTotalHours || ''}
+                    onChange={(e) => {
+                      const value = e.target.value === '' ? undefined : parseFloat(e.target.value);
+                      updateEmployee(employee.id, { ...employee, manualTotalHours: value });
+                    }}
+                    className="w-20 rounded-md border border-gray-300 py-1 px-2 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <div className="flex space-x-2">
