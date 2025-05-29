@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { CameraIcon, XIcon } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface ProfilePictureUploadProps {
     currentImage?: string;
@@ -22,13 +23,13 @@ export function ProfilePictureUpload({ currentImage, onImageUpload, onRemoveImag
     const handleFile = (file: File) => {
         // Validate file type
         if (!file.type.startsWith('image/')) {
-            alert('Please upload an image file');
+            toast.error('Please upload an image file');
             return;
         }
 
         // Validate file size (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
-            alert('File size should be less than 5MB');
+            toast.error('File size should be less than 5MB');
             return;
         }
 

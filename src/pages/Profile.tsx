@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useApp } from '../App';
 import { UserIcon, MailIcon, BuildingIcon, BriefcaseIcon, CameraIcon, LockIcon } from 'lucide-react';
 import { ProfilePictureUpload } from '../components/ProfilePictureUpload';
+import toast from 'react-hot-toast';
 
 export function Profile() {
   const {
@@ -34,10 +35,12 @@ export function Profile() {
         };
 
         updateEmployee(user.id, updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        toast.success('Profile picture updated successfully');
       };
     } catch (error) {
       console.error('Error updating profile picture:', error);
-      alert('Failed to update profile picture. Please try again.');
+      toast.error('Failed to update profile picture. Please try again.');
     }
   };
 
@@ -49,9 +52,11 @@ export function Profile() {
       };
 
       updateEmployee(user.id, updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      toast.success('Profile picture removed successfully');
     } catch (error) {
       console.error('Error removing profile picture:', error);
-      alert('Failed to remove profile picture. Please try again.');
+      toast.error('Failed to remove profile picture. Please try again.');
     }
   };
 
@@ -84,10 +89,10 @@ export function Profile() {
         newPassword: '',
         confirmPassword: ''
       });
-      alert('Password updated successfully');
+      toast.success('Password updated successfully');
     } catch (error) {
       console.error('Error updating password:', error);
-      setPasswordError('Failed to update password. Please try again.');
+      toast.error('Failed to update password. Please try again.');
     }
   };
 

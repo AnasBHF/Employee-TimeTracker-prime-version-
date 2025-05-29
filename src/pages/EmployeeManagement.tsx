@@ -4,6 +4,7 @@ import { PlusIcon, EditIcon, TrashIcon, UserIcon, EyeIcon, SearchIcon, ClockIcon
 import { EmployeeForm } from '../components/EmployeeForm';
 import { EmployeeProfile } from '../components/EmployeeProfile';
 import { DepartmentPositionManager } from '../components/DepartmentPositionManager';
+import toast from 'react-hot-toast';
 
 interface Filters {
   search: string;
@@ -139,6 +140,7 @@ export function EmployeeManagement() {
   const handleDeleteEmployee = (id: string) => {
     if (window.confirm('Are you sure you want to delete this employee?')) {
       deleteEmployee(id);
+      toast.success('Employee deleted successfully');
     }
   };
 
@@ -149,8 +151,10 @@ export function EmployeeManagement() {
   const handleFormSubmit = (employeeData: any) => {
     if (editingEmployee) {
       updateEmployee(editingEmployee.id, employeeData);
+      toast.success('Employee updated successfully');
     } else {
       addEmployee(employeeData);
+      toast.success('Employee added successfully');
     }
     setShowForm(false);
     setEditingEmployee(null);
@@ -176,10 +180,11 @@ export function EmployeeManagement() {
         };
 
         updateEmployee(employeeId, updatedEmployee);
+        toast.success('Profile picture updated successfully');
       };
     } catch (error) {
       console.error('Error updating profile picture:', error);
-      alert('Failed to update profile picture. Please try again.');
+      toast.error('Failed to update profile picture. Please try again.');
     }
   };
 
@@ -191,9 +196,10 @@ export function EmployeeManagement() {
       };
 
       updateEmployee(employeeId, updatedEmployee);
+      toast.success('Profile picture removed successfully');
     } catch (error) {
       console.error('Error removing profile picture:', error);
-      alert('Failed to remove profile picture. Please try again.');
+      toast.error('Failed to remove profile picture. Please try again.');
     }
   };
 

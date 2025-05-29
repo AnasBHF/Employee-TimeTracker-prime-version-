@@ -8,6 +8,9 @@ import { AdminDashboard } from './pages/AdminDashboard';
 import { EmployeeManagement } from './pages/EmployeeManagement';
 import { Navigation } from './components/Navigation';
 import { AdminNavigation } from './components/AdminNavigation';
+import { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
+
 interface User {
   id: string;
   name: string;
@@ -255,7 +258,7 @@ export function App() {
 
     // If there's an existing entry for today, don't create a new one
     if (existingEntry) {
-      alert('You have already clocked in today.');
+      toast.warning('You have already clocked in today.');
       return;
     }
 
@@ -318,29 +321,34 @@ export function App() {
     // Check if department is in use
     const isDepartmentInUse = employees.some(emp => emp.department === department);
     if (isDepartmentInUse) {
-      alert('Cannot remove department that is in use by employees');
+      toast.error('Cannot remove department that is in use by employees');
       return;
     }
     setDepartments(prev => prev.filter(d => d !== department));
+    toast.success('Department removed successfully');
   };
   const addPosition = (position: string) => {
     if (!positions.includes(position)) {
       setPositions(prev => [...prev, position]);
+      toast.success('Position added successfully');
+    } else {
+      toast.error('Position already exists');
     }
   };
   const removePosition = (position: string) => {
     // Check if position is in use
     const isPositionInUse = employees.some(emp => emp.position === position);
     if (isPositionInUse) {
-      alert('Cannot remove position that is in use by employees');
+      toast.error('Cannot remove position that is in use by employees');
       return;
     }
     setPositions(prev => prev.filter(p => p !== position));
+    toast.success('Position removed successfully');
   };
   const addTimeEntry = (employeeId: string, date: string, clockIn: string, clockOut: string) => {
     // Basic validation
     if (!employeeId || !date || !clockIn || !clockOut) {
-      alert('Please fill in all time entry fields.');
+      toast.error('Please fill in all time entry fields.');
       return;
     }
 
@@ -349,7 +357,7 @@ export function App() {
     const clockOutTime = new Date(`${date}T${clockOut}:00`);
 
     if (clockOutTime <= clockInTime) {
-      alert('Clock Out time must be after Clock In time.');
+      toast.error('Clock Out time must be after Clock In time.');
       return;
     }
 
@@ -365,6 +373,7 @@ export function App() {
     };
 
     setTimeEntries(prev => [...prev, newEntry]);
+    toast.success('Time entry added successfully');
   };
   const contextValue: AppContextType = {
     user,
@@ -414,5 +423,13 @@ export function App() {
         </Routes>}
       </div>
     </Router>
+    <Toaster
+      toastOptions={{
+        style: {
+          fontSize: '1rem', // Increase font size
+          padding: '12px', // Increase padding
+        },
+      }}
+    />
   </AppContext.Provider>;
 }
