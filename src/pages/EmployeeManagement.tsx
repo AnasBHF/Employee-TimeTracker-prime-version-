@@ -10,6 +10,7 @@ interface Filters {
   department: string;
   position: string;
   attendanceStatus: string;
+  status: string;
 }
 
 export function EmployeeManagement() {
@@ -34,7 +35,8 @@ export function EmployeeManagement() {
     search: '',
     department: '',
     position: '',
-    attendanceStatus: 'all'
+    attendanceStatus: 'all',
+    status: 'all'
   });
 
   // Get unique departments and positions for filter dropdowns
@@ -58,6 +60,11 @@ export function EmployeeManagement() {
       // Position filter
       const matchesPosition = !filters.position || employee.position === filters.position;
 
+      // Status filter
+      const matchesStatus = filters.status === 'all' ||
+        (filters.status === 'active' && employee.isActive) ||
+        (filters.status === 'inactive' && !employee.isActive);
+
       // Attendance status filter
       const timeEntries = getEmployeeTimeEntries(employee.id);
       const today = new Date().toISOString().split('T')[0];
@@ -70,7 +77,7 @@ export function EmployeeManagement() {
         matchesAttendanceStatus = todayEntry?.clockOut && new Date(todayEntry.clockOut).getHours() < 17;
       }
 
-      return matchesSearch && matchesDepartment && matchesPosition && matchesAttendanceStatus;
+      return matchesSearch && matchesDepartment && matchesPosition && matchesAttendanceStatus && matchesStatus;
     });
   }, [employees, filters, getEmployeeTimeEntries]);
 
@@ -308,6 +315,24 @@ export function EmployeeManagement() {
             {availablePositions.map(pos => (
               <option key={pos} value={pos}>{pos}</option>
             ))}
+          </select>
+        </div>
+
+        {/* Status Filter */}
+        <div className="w-full md:w-48">
+          <label htmlFor="status-filter" className="block text-sm font-medium text-gray-700 mb-1">
+            Status
+          </label>
+          <select
+            id="status-filter"
+            name="status-filter"
+            className="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            value={filters.status}
+            onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+          >
+            <option value="all">All Statuses</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
           </select>
         </div>
 
