@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { UserIcon, MailIcon, BuildingIcon, BriefcaseIcon, ClockIcon } from 'lucide-react';
 import { ProfilePictureUpload } from './ProfilePictureUpload';
+import { useApp } from '../App';
 
 interface EmployeeProfileProps {
     employee: {
@@ -31,6 +32,13 @@ export function EmployeeProfile({
     onRemoveProfilePicture
 }: EmployeeProfileProps) {
     const [isEditing, setIsEditing] = useState(false);
+    const [newTimeEntry, setNewTimeEntry] = useState({
+        date: '',
+        clockIn: '',
+        clockOut: '',
+    });
+
+    const { addTimeEntry, isAdmin } = useApp();
 
     const handleImageUpload = (file: File) => {
         if (onUpdateProfilePicture) {
@@ -42,6 +50,16 @@ export function EmployeeProfile({
         if (onRemoveProfilePicture) {
             onRemoveProfilePicture();
         }
+    };
+
+    const handleManualTimeEntrySubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        addTimeEntry(employee.id, newTimeEntry.date, newTimeEntry.clockIn, newTimeEntry.clockOut);
+        setNewTimeEntry({
+            date: '',
+            clockIn: '',
+            clockOut: '',
+        });
     };
 
     return (
@@ -127,6 +145,56 @@ export function EmployeeProfile({
                         </div>
                     </div>
                 </div>
+
+                {/* Manual Time Entry Form */}
+                {isAdmin && (
+                    <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Manual Time Entry</h3>
+                        <form onSubmit={handleManualTimeEntrySubmit} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label htmlFor="entry-date" className="block text-sm font-medium text-gray-700">Date</label>
+                                <input
+                                    type="date"
+                                    id="entry-date"
+                                    value={newTimeEntry.date}
+                                    onChange={(e) => setNewTimeEntry({ ...newTimeEntry, date: e.target.value })}
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="clock-in" className="block text-sm font-medium text-gray-700">Clock In</label>
+                                <input
+                                    type="time"
+                                    id="clock-in"
+                                    value={newTimeEntry.clockIn}
+                                    onChange={(e) => setNewTimeEntry({ ...newTimeEntry, clockIn: e.target.value })}
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="clock-out" className="block text-sm font-medium text-gray-700">Clock Out</label>
+                                <input
+                                    type="time"
+                                    id="clock-out"
+                                    value={newTimeEntry.clockOut}
+                                    onChange={(e) => setNewTimeEntry({ ...newTimeEntry, clockOut: e.target.value })}
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                    required
+                                />
+                            </div>
+                            <div className="md:col-span-3 text-right">
+                                <button
+                                    type="submit"
+                                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                                >
+                                    Add Entry
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                )}
 
                 {/* Attendance History */}
                 <div className="bg-white rounded-lg shadow-sm p-6">

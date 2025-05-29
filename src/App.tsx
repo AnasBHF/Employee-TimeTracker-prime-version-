@@ -57,6 +57,7 @@ interface AppContextType {
   removeDepartment: (department: string) => void;
   addPosition: (position: string) => void;
   removePosition: (position: string) => void;
+  addTimeEntry: (employeeId: string, date: string, clockIn: string, clockOut: string) => void;
 }
 const AppContext = createContext<AppContextType | null>(null);
 export const useApp = () => {
@@ -336,6 +337,35 @@ export function App() {
     }
     setPositions(prev => prev.filter(p => p !== position));
   };
+  const addTimeEntry = (employeeId: string, date: string, clockIn: string, clockOut: string) => {
+    // Basic validation
+    if (!employeeId || !date || !clockIn || !clockOut) {
+      alert('Please fill in all time entry fields.');
+      return;
+    }
+
+    // Calculate total hours
+    const clockInTime = new Date(`${date}T${clockIn}:00`);
+    const clockOutTime = new Date(`${date}T${clockOut}:00`);
+
+    if (clockOutTime <= clockInTime) {
+      alert('Clock Out time must be after Clock In time.');
+      return;
+    }
+
+    const totalHours = (clockOutTime.getTime() - clockInTime.getTime()) / (1000 * 60 * 60);
+
+    const newEntry: TimeEntry = {
+      id: Date.now().toString(), // Simple unique ID
+      employeeId,
+      date,
+      clockIn,
+      clockOut,
+      totalHours: Math.round(totalHours * 100) / 100,
+    };
+
+    setTimeEntries(prev => [...prev, newEntry]);
+  };
   const contextValue: AppContextType = {
     user,
     isAdmin,
@@ -356,7 +386,8 @@ export function App() {
     addDepartment,
     removeDepartment,
     addPosition,
-    removePosition
+    removePosition,
+    addTimeEntry,
   };
   return <AppContext.Provider value={contextValue}>
     <Router>
