@@ -60,7 +60,7 @@ export function DepartmentPositionManager({
                             </button>
                         </div>
                     </form>
-                    <div className="space-y-2">
+                    <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2">
                         {departments.map((dept) => (
                             <div
                                 key={dept}
@@ -99,7 +99,7 @@ export function DepartmentPositionManager({
                             </button>
                         </div>
                     </form>
-                    <div className="space-y-2">
+                    <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2">
                         {positions.map((pos) => (
                             <div
                                 key={pos}
