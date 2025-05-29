@@ -245,8 +245,19 @@ export function App() {
     const now = new Date();
     const today = now.toISOString().split('T')[0];
     const time = now.toTimeString().slice(0, 5);
-    const existingEntry = getCurrentEntry();
-    if (existingEntry && !existingEntry.clockOut) return;
+
+    // Check if there's already a clock-in entry for today
+    const existingEntry = timeEntries.find(entry =>
+      entry.date === today &&
+      entry.employeeId === user.id
+    );
+
+    // If there's an existing entry for today, don't create a new one
+    if (existingEntry) {
+      alert('You have already clocked in today.');
+      return;
+    }
+
     const newEntry: TimeEntry = {
       id: Date.now().toString(),
       employeeId: user.id,

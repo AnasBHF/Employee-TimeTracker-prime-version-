@@ -1,0 +1,69 @@
+Theme,ID,User Story,Acceptance Criteria,Status
+Authentication,AU-001,As an employee, I want to log in to the system so that I can access my time tracking features,"- User can enter email and password
+- System validates credentials
+- User is redirected to dashboard after successful login
+- Error message shown for invalid credentials",Completed
+Authentication,AU-002,As an admin, I want to log in to the system so that I can manage employees and view reports,"- Admin can enter email and password
+- System validates admin credentials
+- Admin is redirected to admin dashboard
+- Error message shown for invalid credentials",Completed
+Time Tracking,TT-001,As an employee, I want to clock in and out so that my work hours are recorded,"- Employee can click clock in/out button
+- System records timestamp
+- System shows confirmation message
+- System prevents multiple clock-ins",Completed
+Time Tracking,TT-002,As an employee, I want to view my attendance history so that I can track my work hours,"- Employee can see list of clock in/out times
+- History shows date and time
+- History shows total hours worked
+- History can be filtered by date range",Completed
+Time Tracking,TT-003,As an employee, I want to receive notifications for late arrivals so that I can maintain punctuality,"- System detects late arrival
+- Employee receives notification
+- Notification shows expected vs actual arrival time
+- Employee can acknowledge notification",Not Started
+Profile Management,PM-001,As an employee, I want to update my profile picture so that my account is personalized,"- Employee can upload new profile picture
+- System validates image format and size
+- Employee can preview image before saving
+- Employee can remove existing picture",Completed
+Profile Management,PM-002,As an employee, I want to update my personal information so that my profile is current,"- Employee can edit name, email, phone
+- System validates input data
+- Changes are saved immediately
+- Success message shown after update",Not Started
+Employee Management,EM-001,As an admin, I want to add new employees so that they can use the system,"- Admin can enter employee details
+- System validates required fields
+- System generates employee ID
+- Welcome email sent to new employee",Completed
+Employee Management,EM-002,As an admin, I want to view employee profiles so that I can manage their information,"- Admin can see employee list
+- Admin can click to view detailed profile
+- Profile shows all employee information
+- Profile shows attendance history",Completed
+Employee Management,EM-003,As an admin, I want to manage departments and positions so that I can organize employees,"- Admin can add new departments
+- Admin can add new positions
+- Admin can remove departments/positions
+- Changes reflect in employee profiles",Completed
+Reporting,RP-001,As an admin, I want to view late arrivals report so that I can monitor attendance issues,"- Admin can see list of late arrivals
+- Report shows employee name and time
+- Report can be filtered by date
+- Report can be exported",Completed
+Reporting,RP-002,As an admin, I want to view early leaves report so that I can monitor attendance issues,"- Admin can see list of early leaves
+- Report shows employee name and time
+- Report can be filtered by date
+- Report can be exported",Completed
+Reporting,RP-003,As an admin, I want to generate attendance reports so that I can analyze employee attendance,"- Admin can select date range
+- Report shows attendance statistics
+- Report shows trends and patterns
+- Report can be exported in multiple formats",Not Started
+Notifications,NT-001,As an employee, I want to receive attendance reminders so that I don't forget to clock in/out,"- System sends reminder before work hours
+- System sends reminder at end of work hours
+- Employee can customize reminder times
+- Employee can disable reminders",Not Started
+Notifications,NT-002,As an admin, I want to receive alerts for attendance issues so that I can take action,"- System alerts for multiple late arrivals
+- System alerts for early leaves
+- Admin can set alert thresholds
+- Admin can customize alert preferences",Not Started
+Settings,ST-001,As an admin, I want to configure work hours so that attendance can be properly tracked,"- Admin can set standard work hours
+- Admin can set different hours for departments
+- Admin can set holidays
+- Changes apply to attendance tracking",Not Started
+Settings,ST-002,As an admin, I want to manage system notifications so that users receive relevant alerts,"- Admin can enable/disable notifications
+- Admin can customize notification messages
+- Admin can set notification schedules
+- Changes apply to all users",Not Started 
