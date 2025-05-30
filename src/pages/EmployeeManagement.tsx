@@ -4,8 +4,8 @@ import { PlusIcon, EditIcon, TrashIcon, UserIcon, EyeIcon, SearchIcon, ClockIcon
 import { EmployeeForm } from '../components/EmployeeForm';
 import { EmployeeProfile } from '../components/EmployeeProfile';
 import { DepartmentPositionManager } from '../components/DepartmentPositionManager';
-import { Select, Input, Space, Button } from 'antd';
-import { SearchOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons';
+import { Select, Input, Space, Button, Modal } from 'antd';
+import { SearchOutlined, FilterOutlined, CloseOutlined, ExclamationCircleFilled } from '@ant-design/icons';
 import toast from 'react-hot-toast';
 
 interface Filters {
@@ -34,6 +34,7 @@ export function EmployeeManagement() {
   const [showSettings, setShowSettings] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState<any>(null);
   const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
+  const [employeeToDelete, setEmployeeToDelete] = useState<any>(null);
   const [filters, setFilters] = useState<Filters>({
     search: '',
     department: '',
@@ -140,10 +141,20 @@ export function EmployeeManagement() {
   };
 
   const handleDeleteEmployee = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this employee?')) {
-      deleteEmployee(id);
+    const employee = employees.find(emp => emp.id === id);
+    setEmployeeToDelete(employee);
+  };
+
+  const confirmDelete = () => {
+    if (employeeToDelete) {
+      deleteEmployee(employeeToDelete.id);
       toast.success('Employee deleted successfully');
+      setEmployeeToDelete(null);
     }
+  };
+
+  const cancelDelete = () => {
+    setEmployeeToDelete(null);
   };
 
   const handleViewProfile = (employee: any) => {
@@ -566,5 +577,28 @@ export function EmployeeManagement() {
         onRemoveProfilePicture={() => handleRemoveProfilePicture(selectedEmployee.id)}
       />
     )}
+
+    {/* Delete Confirmation Modal */}
+    <Modal
+      title="Delete Employee"
+      open={!!employeeToDelete}
+      onOk={confirmDelete}
+      onCancel={cancelDelete}
+      okText="Delete"
+      okButtonProps={{ danger: true }}
+      cancelText="Cancel"
+    >
+      <div className="flex items-center space-x-4">
+        <ExclamationCircleFilled className="text-red-500 text-2xl" />
+        <div>
+          <p className="text-base">
+            Are you sure you want to delete {employeeToDelete?.name}?
+          </p>
+          <p className="text-sm text-gray-500 mt-1">
+            This action cannot be undone.
+          </p>
+        </div>
+      </div>
+    </Modal>
   </div>;
 }
