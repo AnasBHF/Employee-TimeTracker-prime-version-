@@ -4,6 +4,8 @@ import { PlusIcon, EditIcon, TrashIcon, UserIcon, EyeIcon, SearchIcon, ClockIcon
 import { EmployeeForm } from '../components/EmployeeForm';
 import { EmployeeProfile } from '../components/EmployeeProfile';
 import { DepartmentPositionManager } from '../components/DepartmentPositionManager';
+import { Select, Input, Space, Button } from 'antd';
+import { SearchOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons';
 import toast from 'react-hot-toast';
 
 interface Filters {
@@ -278,16 +280,14 @@ export function EmployeeManagement() {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Search Employees
           </label>
-          <div className="relative">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <input
-              type="text"
-              value={filters.search}
-              onChange={e => setFilters(prev => ({ ...prev, search: e.target.value }))}
-              placeholder="Search by name, email, ID..."
-              className="pl-10 w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            />
-          </div>
+          <Input
+            prefix={<SearchOutlined className="text-gray-400" />}
+            placeholder="Search by name, email, ID..."
+            value={filters.search}
+            onChange={e => setFilters(prev => ({ ...prev, search: e.target.value }))}
+            className="hover:border-blue-500 focus:border-blue-500"
+            size="large"
+          />
         </div>
 
         {/* Department Filter */}
@@ -295,16 +295,21 @@ export function EmployeeManagement() {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Department
           </label>
-          <select
+          <Select
             value={filters.department}
-            onChange={e => setFilters(prev => ({ ...prev, department: e.target.value }))}
-            className="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          >
-            <option value="">All Departments</option>
-            {availableDepartments.map(dept => (
-              <option key={dept} value={dept}>{dept}</option>
-            ))}
-          </select>
+            onChange={value => setFilters(prev => ({ ...prev, department: value }))}
+            placeholder="All Departments"
+            allowClear
+            className="w-full"
+            size="large"
+            options={[
+              { value: '', label: 'All Departments' },
+              ...availableDepartments.map(dept => ({
+                value: dept,
+                label: dept
+              }))
+            ]}
+          />
         </div>
 
         {/* Position Filter */}
@@ -312,34 +317,40 @@ export function EmployeeManagement() {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Position
           </label>
-          <select
+          <Select
             value={filters.position}
-            onChange={e => setFilters(prev => ({ ...prev, position: e.target.value }))}
-            className="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          >
-            <option value="">All Positions</option>
-            {availablePositions.map(pos => (
-              <option key={pos} value={pos}>{pos}</option>
-            ))}
-          </select>
+            onChange={value => setFilters(prev => ({ ...prev, position: value }))}
+            placeholder="All Positions"
+            allowClear
+            className="w-full"
+            size="large"
+            options={[
+              { value: '', label: 'All Positions' },
+              ...availablePositions.map(pos => ({
+                value: pos,
+                label: pos
+              }))
+            ]}
+          />
         </div>
 
         {/* Status Filter */}
         <div className="w-full md:w-48">
-          <label htmlFor="status-filter" className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
             Status
           </label>
-          <select
-            id="status-filter"
-            name="status-filter"
-            className="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          <Select
             value={filters.status}
-            onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-          >
-            <option value="all">All Statuses</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
+            onChange={value => setFilters(prev => ({ ...prev, status: value }))}
+            placeholder="All Statuses"
+            className="w-full"
+            size="large"
+            options={[
+              { value: 'all', label: 'All Statuses' },
+              { value: 'active', label: 'Active' },
+              { value: 'inactive', label: 'Inactive' }
+            ]}
+          />
         </div>
 
         {/* Attendance Status Filter */}
@@ -347,16 +358,37 @@ export function EmployeeManagement() {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Attendance Status
           </label>
-          <select
+          <Select
             value={filters.attendanceStatus}
-            onChange={e => setFilters(prev => ({ ...prev, attendanceStatus: e.target.value }))}
-            className="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          >
-            <option value="all">All</option>
-            <option value="late">Late Arrivals</option>
-            <option value="early-leaving">Early Leaving</option>
-          </select>
+            onChange={value => setFilters(prev => ({ ...prev, attendanceStatus: value }))}
+            placeholder="All"
+            className="w-full"
+            size="large"
+            options={[
+              { value: 'all', label: 'All' },
+              { value: 'late', label: 'Late Arrivals' },
+              { value: 'early-leaving', label: 'Early Leaving' }
+            ]}
+          />
         </div>
+
+        {/* Clear Filters */}
+        {(filters.search || filters.department || filters.position || filters.status !== 'all' || filters.attendanceStatus !== 'all') && (
+          <Button
+            type="text"
+            icon={<CloseOutlined />}
+            onClick={() => setFilters({
+              search: '',
+              department: '',
+              position: '',
+              status: 'all',
+              attendanceStatus: 'all'
+            })}
+            className="flex items-center"
+          >
+            Clear Filters
+          </Button>
+        )}
       </div>
     </div>
     {/* Employee Stats */}

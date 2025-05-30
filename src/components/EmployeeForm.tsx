@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../App';
+import { Form, Input, Select, Switch, Button, Space } from 'antd';
 
 interface EmployeeFormProps {
   employee?: {
@@ -17,106 +18,107 @@ interface EmployeeFormProps {
 
 export function EmployeeForm({ employee, onSubmit, onCancel }: EmployeeFormProps) {
   const { departments, positions } = useApp();
-  const [formData, setFormData] = useState({
-    name: employee?.name || '',
-    email: employee?.email || '',
-    department: employee?.department || '',
-    position: employee?.position || '',
-    isActive: employee?.isActive ?? true,
-    password: employee?.password || ''
-  });
+  const [form] = Form.useForm();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSubmit(formData);
+  const handleSubmit = (values: any) => {
+    onSubmit(values);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Name</label>
-        <input
-          type="text"
-          value={formData.name}
-          onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          required
+    <Form
+      form={form}
+      layout="vertical"
+      initialValues={{
+        name: employee?.name || '',
+        email: employee?.email || '',
+        department: employee?.department || '',
+        position: employee?.position || '',
+        isActive: employee?.isActive ?? true,
+        password: employee?.password || ''
+      }}
+      onFinish={handleSubmit}
+    >
+      <Form.Item
+        name="name"
+        label="Name"
+        rules={[{ required: true, message: 'Please enter employee name' }]}
+      >
+        <Input size="large" placeholder="Enter employee name" />
+      </Form.Item>
+
+      <Form.Item
+        name="email"
+        label="Email"
+        rules={[
+          { required: true, message: 'Please enter email address' },
+          { type: 'email', message: 'Please enter a valid email' }
+        ]}
+      >
+        <Input size="large" placeholder="Enter email address" />
+      </Form.Item>
+
+      <Form.Item
+        name="department"
+        label="Department"
+        rules={[{ required: true, message: 'Please select department' }]}
+      >
+        <Select
+          size="large"
+          placeholder="Select Department"
+          options={departments.map(dept => ({
+            value: dept,
+            label: dept
+          }))}
         />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Email</label>
-        <input
-          type="email"
-          value={formData.email}
-          onChange={e => setFormData(prev => ({ ...prev, email: e.target.value }))}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          required
+      </Form.Item>
+
+      <Form.Item
+        name="position"
+        label="Position"
+        rules={[{ required: true, message: 'Please select position' }]}
+      >
+        <Select
+          size="large"
+          placeholder="Select Position"
+          options={positions.map(pos => ({
+            value: pos,
+            label: pos
+          }))}
         />
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Department</label>
-        <select
-          value={formData.department}
-          onChange={e => setFormData(prev => ({ ...prev, department: e.target.value }))}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          required
-        >
-          <option value="">Select Department</option>
-          {departments.map(dept => (
-            <option key={dept} value={dept}>{dept}</option>
-          ))}
-        </select>
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Position</label>
-        <select
-          value={formData.position}
-          onChange={e => setFormData(prev => ({ ...prev, position: e.target.value }))}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-          required
-        >
-          <option value="">Select Position</option>
-          {positions.map(pos => (
-            <option key={pos} value={pos}>{pos}</option>
-          ))}
-        </select>
-      </div>
+      </Form.Item>
+
+      <Form.Item
+        name="isActive"
+        label="Status"
+        valuePropName="checked"
+      >
+        <Switch
+          checkedChildren="Active"
+          unCheckedChildren="Inactive"
+          defaultChecked
+        />
+      </Form.Item>
+
       {!employee && (
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Password</label>
-          <input
-            type="password"
-            value={formData.password}
-            onChange={e => setFormData(prev => ({ ...prev, password: e.target.value }))}
-            className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-            required
-          />
-        </div>
+        <Form.Item
+          name="password"
+          label="Password"
+          rules={[{ required: true, message: 'Please enter password' }]}
+        >
+          <Input.Password size="large" placeholder="Enter password" />
+        </Form.Item>
       )}
-      <div className="flex items-center">
-        <input
-          type="checkbox"
-          checked={formData.isActive}
-          onChange={e => setFormData(prev => ({ ...prev, isActive: e.target.checked }))}
-          className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-        />
-        <label className="ml-2 block text-sm text-gray-900">Active</label>
-      </div>
-      <div className="flex justify-end space-x-3">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          {employee ? 'Update' : 'Create'}
-        </button>
-      </div>
-    </form>
+
+      <Form.Item>
+        <Space className="w-full justify-end">
+          <Button onClick={onCancel} size="large">
+            Cancel
+          </Button>
+          <Button type="primary" htmlType="submit" size="large">
+            {employee ? 'Update' : 'Create'} Employee
+          </Button>
+        </Space>
+      </Form.Item>
+    </Form>
   );
 }
