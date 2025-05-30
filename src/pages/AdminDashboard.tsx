@@ -2,6 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { useApp } from '../App';
 import { UsersIcon, ClockIcon, TrendingUpIcon, PieChartIcon, SearchIcon, FilterIcon, XIcon } from 'lucide-react';
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Select, Input, Space, Button } from 'antd';
+import { SearchOutlined, FilterOutlined, CloseOutlined } from '@ant-design/icons';
 interface Filters {
   department: string;
   position: string;
@@ -130,68 +132,91 @@ export function AdminDashboard() {
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Search Employees
           </label>
-          <div className="relative">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <input type="text" value={filters.search} onChange={e => setFilters(prev => ({
-              ...prev,
-              search: e.target.value
-            }))} placeholder="Search by name, email, ID..." className="pl-10 w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500" />
-          </div>
+          <Input
+            prefix={<SearchOutlined className="text-gray-400" />}
+            placeholder="Search by name, email, ID..."
+            value={filters.search}
+            onChange={e => setFilters(prev => ({ ...prev, search: e.target.value }))}
+            className="hover:border-blue-500 focus:border-blue-500"
+            size="large"
+          />
         </div>
         {/* Department Filter */}
         <div className="w-full md:w-48">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Department
           </label>
-          <select value={filters.department} onChange={e => setFilters(prev => ({
-            ...prev,
-            department: e.target.value
-          }))} className="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500">
-            <option value="">All Departments</option>
-            {departments.map(dept => <option key={dept} value={dept}>
-              {dept}
-            </option>)}
-          </select>
+          <Select
+            value={filters.department}
+            onChange={value => setFilters(prev => ({ ...prev, department: value }))}
+            placeholder="All Departments"
+            allowClear
+            className="w-full"
+            size="large"
+            options={[
+              { value: '', label: 'All Departments' },
+              ...departments.map(dept => ({
+                value: dept,
+                label: dept
+              }))
+            ]}
+          />
         </div>
         {/* Position Filter */}
         <div className="w-full md:w-48">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Position
           </label>
-          <select value={filters.position} onChange={e => setFilters(prev => ({
-            ...prev,
-            position: e.target.value
-          }))} className="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500">
-            <option value="">All Positions</option>
-            {positions.map(pos => <option key={pos} value={pos}>
-              {pos}
-            </option>)}
-          </select>
+          <Select
+            value={filters.position}
+            onChange={value => setFilters(prev => ({ ...prev, position: value }))}
+            placeholder="All Positions"
+            allowClear
+            className="w-full"
+            size="large"
+            options={[
+              { value: '', label: 'All Positions' },
+              ...positions.map(pos => ({
+                value: pos,
+                label: pos
+              }))
+            ]}
+          />
         </div>
         {/* Clock Status Filter */}
         <div className="w-full md:w-48">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Clock Status
           </label>
-          <select value={filters.clockStatus} onChange={e => setFilters(prev => ({
-            ...prev,
-            clockStatus: e.target.value as Filters['clockStatus']
-          }))} className="w-full rounded-md border border-gray-300 py-2 px-3 focus:outline-none focus:ring-1 focus:ring-blue-500">
-            <option value="all">All Status</option>
-            <option value="clocked-in">Currently Clocked In</option>
-            <option value="completed">Completed Today</option>
-          </select>
+          <Select
+            value={filters.clockStatus}
+            onChange={value => setFilters(prev => ({ ...prev, clockStatus: value as Filters['clockStatus'] }))}
+            placeholder="All Status"
+            className="w-full"
+            size="large"
+            options={[
+              { value: 'all', label: 'All Status' },
+              { value: 'clocked-in', label: 'Currently Clocked In' },
+              { value: 'completed', label: 'Completed Today' }
+            ]}
+          />
         </div>
         {/* Clear Filters */}
-        {(filters.search || filters.department || filters.position || filters.clockStatus !== 'all') && <button onClick={() => setFilters({
-          department: '',
-          position: '',
-          clockStatus: 'all',
-          search: ''
-        })} className="flex items-center px-3 py-2 text-sm text-gray-600 hover:text-gray-900">
-          <XIcon className="h-4 w-4 mr-1" />
-          Clear Filters
-        </button>}
+        {(filters.search || filters.department || filters.position || filters.clockStatus !== 'all') && (
+          <Button
+            type="text"
+            icon={<CloseOutlined />}
+            onClick={() => setFilters({
+              department: '',
+              position: '',
+              clockStatus: 'all',
+              search: ''
+            })}
+            className="flex items-center"
+          >
+            Clear Filters
+          </Button>
+        )}
       </div>
     </div>
     {/* Stats Cards */}
